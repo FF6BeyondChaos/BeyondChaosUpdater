@@ -348,3 +348,6 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+/BeyondChaosUpdater/build/BeyondChaosUpdater
+/BeyondChaosUpdater/dist
+/BeyondChaosUpdater/BeyondChaosUpdater.spec
