@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "BeyondChaosUpdater", "BeyondChaosUpdater.pyproj", "{A41BCEDB-E597-429C-91CE-224E3DA573F6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A41BCEDB-E597-429C-91CE-224E3DA573F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A41BCEDB-E597-429C-91CE-224E3DA573F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D8314F01-6733-43D7-83B9-E6C2F5A93066}
+	EndGlobalSection
+EndGlobal
