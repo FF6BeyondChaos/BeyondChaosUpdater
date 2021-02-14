@@ -10,10 +10,9 @@ from pathlib import Path
 
 
 def main():
-    print(os.getcwd())
     print(Constants.UpdaterLaunched)
     print(Constants.CheckINI)
-    if Config.checkINI:
+    if Config.checkINI():
         print(Constants.INIFound)
         updateBC()
         updateSprites()
