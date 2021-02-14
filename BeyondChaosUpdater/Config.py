@@ -2,6 +2,7 @@ from configparser import ConfigParser
 from pathlib import Path
 import os
 import requests
+import traceback
 config = ConfigParser()
 
 #plans:
@@ -9,14 +10,17 @@ config = ConfigParser()
 
 
 def writeConfig(coreVersion, spriteVersion):
-    config.read(Path(os.getcwd()+"/config.ini"))
-    config.add_section('Version')
-    config.set('Version', 'Core', coreVersion)
-    config.set('Version', 'Sprite', spriteVersion)
-    #config.set('main', 'key3', 'value3')
+    try:
+        config.read(Path(os.getcwd()+"/config.ini"))
+        config.add_section('Version')
+        config.set('Version', 'Core', coreVersion)
+        config.set('Version', 'Sprite', spriteVersion)
+        #config.set('main', 'key3', 'value3')
 
-    with open(Path(os.getcwd()+"/config.ini"), 'w') as f:
-        config.write(f)
+        with open(Path(os.getcwd()+"/config.ini"), 'w') as f:
+            config.write(f)
+    except Exception:
+        traceback.print_exc()
 
 #def readConfig():
 #    config.read(os.getcwd()+'config.ini')
@@ -26,24 +30,36 @@ def writeConfig(coreVersion, spriteVersion):
 
 
 def checkINI():
-    my_file = Path(os.getcwd()+"/config.ini")
-    if my_file.is_file():
-        # file exists
-        return True
-    else:
-        return False
+    try:
+        my_file = Path(os.getcwd()+"/config.ini")
+        if my_file.is_file():
+            # file exists
+            return True
+        else:
+            return False
+    except Exception:
+        traceback.print_exc()
 
 def initConfig():
-    CoreVersion = getCoreVersion()
-    SpriteVersion = getSpriteVersion()
-    writeConfig(CoreVersion, SpriteVersion)
+    try:
+        CoreVersion = getCoreVersion()
+        SpriteVersion = getSpriteVersion()
+        writeConfig(CoreVersion, SpriteVersion)
+    except Exception:
+        traceback.print_exc()
 
 def getSpriteVersion():
-    x = requests.get('https://api.github.com/repos/FF6BeyondChaos/BeyondChaosSprites/releases/latest').json()   
-    version = x['tag_name']
-    return version
+    try:
+        x = requests.get('https://api.github.com/repos/FF6BeyondChaos/BeyondChaosSprites/releases/latest').json()   
+        version = x['tag_name']
+        return version
+    except Exception:
+        traceback.print_exc()
 
 def getCoreVersion():
-    x = requests.get('https://api.github.com/repos/FF6BeyondChaos/BeyondChaosRandomizer/releases/latest').json()   
-    version = x['tag_name']
-    return version
+    try:
+        x = requests.get('https://api.github.com/repos/FF6BeyondChaos/BeyondChaosRandomizer/releases/latest').json()   
+        version = x['tag_name']
+        return version
+    except Exception:
+        traceback.print_exc()
