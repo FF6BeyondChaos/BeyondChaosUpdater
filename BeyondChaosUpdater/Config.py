@@ -1,5 +1,6 @@
 from configparser import ConfigParser
 from pathlib import Path
+import os
 config = ConfigParser()
 
 #plans:
@@ -8,7 +9,7 @@ CoreVersion = ""
 SpriteVersion = ""
 
 def writeConfig():
-    config.read('config.ini')
+    config.read(os.getcwd()+'config.ini')
     config.add_section('Version')
     config.set('Version', 'Core', CoreVersion)
     config.set('Version', 'Sprite', SpriteVersion)
@@ -18,7 +19,7 @@ def writeConfig():
         config.write(f)
 
 def readConfig():
-    config.read('config.ini')
+    config.read(os.getcwd()+'config.ini')
     CoreVersion = config.get('Version', 'Core') # -> "value1"
     SpriteVersion= config.get('Version', 'Sprite') # -> "value2"
     #print config.get('main', 'key3') # -> "value3"
