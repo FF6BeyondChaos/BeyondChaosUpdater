@@ -3,6 +3,7 @@ import subprocess
 import Constants
 import Config
 import requests
+import time
 import shutil
 from pathlib import Path
 
@@ -45,7 +46,7 @@ def updateSprites():
                 shutil.copyfileobj(r.raw, f)
         time.sleep(3)
     with ZipFile('Sprites.zip', 'r') as zipObj:
-        print(Constants.UpdaterUnzipping)
+        print(Constants.UpdateSprites)
         # Extract all the contents of zip file in different directory
         zipObj.extractall("/Custom/")
         #wait 3 seconds
@@ -69,7 +70,7 @@ def updateBC():
         time.sleep(3)
 
     with ZipFile('BeyondChaos.zip', 'r') as zipObj:
-        print(Constants.UpdaterUnzipping)
+        print(Constants.UpdateBC)
         # Extract all the contents of zip file in different directory
         zipObj.extractall()
         #wait 3 seconds
