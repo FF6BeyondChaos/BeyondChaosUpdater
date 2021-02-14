@@ -17,9 +17,12 @@ def main():
         print(Constants.UpdaterCompleted)
         launchBC()
     else:
+        print (Constants.NoINI)
         Config.initConfig()
         updateSprites()
         updateBC()
+        print(Constants.UpdaterCompleted)
+        launchBC()
 
 def launchBC():
      print(Constants.UpdaterClosing)
