@@ -5,10 +5,12 @@ import Config
 import requests
 import time
 import shutil
+import os
 from pathlib import Path
 
 
 def main():
+    print(os.getcwd())
     print(Constants.UpdaterLaunched)
     print(Constants.CheckINI)
     if Config.checkINI:
@@ -27,7 +29,7 @@ def main():
 
 def launchBC():
      print(Constants.UpdaterClosing)
-     subprocess.run("BeyondChaos.exe", shell=True)
+     os.startfile('BeyondChaos.exe')
      #wait 3 seconds
      time.sleep(3)
 
@@ -48,7 +50,7 @@ def updateSprites():
     with ZipFile('Sprites.zip', 'r') as zipObj:
         print(Constants.UpdateSprites)
         # Extract all the contents of zip file in different directory
-        zipObj.extractall("/Custom/")
+        zipObj.extractall(os.getcwd()+"/Custom/")
         #wait 3 seconds
         time.sleep(3)
         print(Constants.UpdateSpriteDone)
@@ -68,11 +70,11 @@ def updateBC():
             with open(local_filename, 'wb') as f:
                 shutil.copyfileobj(r.raw, f)
         time.sleep(3)
-
+        
     with ZipFile('BeyondChaos.zip', 'r') as zipObj:
         print(Constants.UpdateBC)
         # Extract all the contents of zip file in different directory
-        zipObj.extractall()
+        zipObj.extractall(os.getcwd())
         #wait 3 seconds
         time.sleep(3)
         print (Constants.UpdateBCDone)
