@@ -1,4 +1,7 @@
 UpdaterLaunched = "Welcome to the updater, we are starting things up, please do not close this window!"
+CheckINI = "Checking to see if config file exists..."
+NoINI = "No config file found, running first setup please wait."
+INIFound = "Config file was found, running updater."
 UpdateBC = "Updater is updating the randomizer core";
 UpdateBCDone = "Updater has updated the randomizer core";
 UpdateSprites = "Updater is updating the randomizer sprites";

@@ -22,6 +22,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="BeyondChaosUpdater.py" />
+    <Compile Include="Config.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Constants.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
