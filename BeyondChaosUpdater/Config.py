@@ -14,6 +14,12 @@ def writeConfig():
         coreVersion = getCoreVersion()
         spriteVersion = getSpriteVersion()
         config.read(Path(os.getcwd()+"/config.ini"))
+        try:
+            config.add_section('Version')
+        except Exception:
+            #do nothing we know it broke because it doesn't exist
+            #todo: turn this somehow into if not exists write it.
+            print("Version Section already exists, skipping adding it")
         config.set('Version', 'Core', coreVersion)
         config.set('Version', 'Sprite', spriteVersion)
         #config.set('main', 'key3', 'value3')
