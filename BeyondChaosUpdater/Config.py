@@ -3,16 +3,17 @@ from pathlib import Path
 import os
 import requests
 import traceback
-config = ConfigParser()
+config = ConfigParser(strict=False)
 
 #plans:
 #the updater only will set the version...
 
 
-def writeConfig(coreVersion, spriteVersion):
+def writeConfig():
     try:
+        coreVersion = getCoreVersion()
+        spriteVersion = getSpriteVersion()
         config.read(Path(os.getcwd()+"/config.ini"))
-        config.add_section('Version')
         config.set('Version', 'Core', coreVersion)
         config.set('Version', 'Sprite', spriteVersion)
         #config.set('main', 'key3', 'value3')
@@ -21,12 +22,6 @@ def writeConfig(coreVersion, spriteVersion):
             config.write(f)
     except Exception:
         traceback.print_exc()
-
-#def readConfig():
-#    config.read(os.getcwd()+'config.ini')
-#    CoreVersion = config.get('Version', 'Core') # -> "value1"
-#    SpriteVersion= config.get('Version', 'Sprite') # -> "value2"
-#    #print config.get('main', 'key3') # -> "value3"
 
 
 def checkINI():

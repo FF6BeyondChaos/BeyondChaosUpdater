@@ -1,4 +1,5 @@
 UpdaterLaunched = "Welcome to the updater, we are starting things up, please do not close this window!"
+wait = "Waiting 5 seconds for randomizer to close"
 CheckINI = "Checking to see if config file exists..."
 NoINI = "No config file found, running first setup please wait."
 INIFound = "Config file was found, running updater."

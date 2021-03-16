@@ -6,6 +6,7 @@ import requests
 import time
 import shutil
 import os
+import time
 import traceback
 from pathlib import Path
 
@@ -13,11 +14,15 @@ from pathlib import Path
 def main():
     try:
         print(Constants.UpdaterLaunched)
+        #wait 3 seconds
+        print(Constants.wait)
+        time.sleep(5)
         print(Constants.CheckINI)
         if Config.checkINI():
             print(Constants.INIFound)
             updateBC()
             updateSprites()
+            Config.writeConfig()
             print(Constants.UpdaterCompleted)
             launchBC()
         else:
@@ -82,7 +87,6 @@ def updateBC():
             time.sleep(3)
         
         with ZipFile('BeyondChaos.zip', 'r') as zipObj:
-            print(Constants.UpdateBC)
             # Extract all the contents of zip file in different directory
             zipObj.extractall(os.getcwd())
             #wait 3 seconds
@@ -90,8 +94,6 @@ def updateBC():
             print (Constants.UpdateBCDone)
     except Exception:
         traceback.print_exc()
-
-
 
 if __name__ == '__main__':
    main()
