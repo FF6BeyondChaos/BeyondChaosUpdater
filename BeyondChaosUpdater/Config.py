@@ -37,9 +37,7 @@ def checkINI():
 
 def initConfig():
     try:
-        CoreVersion = getCoreVersion()
-        SpriteVersion = getSpriteVersion()
-        writeConfig(CoreVersion, SpriteVersion)
+        writeConfig()
     except Exception:
         traceback.print_exc()
 
