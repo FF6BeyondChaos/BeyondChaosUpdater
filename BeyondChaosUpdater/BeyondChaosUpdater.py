@@ -20,7 +20,7 @@ def main():
         print(Constants.CheckINI)
         if Config.checkINI():
             print(Constants.INIFound)
-            updateBC()
+            #updateBC()
             updateSprites()
             Config.writeConfig()
             print(Constants.UpdaterCompleted)
@@ -29,7 +29,7 @@ def main():
             print (Constants.NoINI)
             Config.initConfig()
             updateSprites()
-            updateBC()
+            #updateBC()
             print(Constants.UpdaterCompleted)
             launchBC()
     except Exception:
