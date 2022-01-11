@@ -46,16 +46,24 @@ def launch_beyond_chaos():
 def update_remonsterate():
     try:
         # Create the remonsterate directory in the game directory
-        os.mkdir(os.path.join(os.getcwd(), 'remonsterate'))
-        print("Remonsterate directory created.")
+        base_directory = os.path.join(os.getcwd(), 'remonsterate')
+        sprite_directory = os.path.join(base_directory, "sprites")
+        image_file = os.path.join(base_directory, "images_and_tags.txt")
+        monster_file = os.path.join(base_directory, "monsters_and_tags.txt")
 
-        # Create the remonsterate sprites directory in remonsterate
-        os.mkdir(os.path.join(os.getcwd(), 'remonsterate', 'sprites'))
-        print("Sprites directory created in remonsterate.")
+        if not os.path.isdir(base_directory):
+            os.mkdir(base_directory)
+            print("Remonsterate directory created.")
 
-        # Create the default images_and_tags.txt and monsters_and_tags.txt files
-        with open(os.path.join(os.getcwd(), 'remonsterate\\images_and_tags.txt'), 'w') as text_file:
-            text_file.write(
+        if not os.path.isdir(sprite_directory):
+            # Create the remonsterate sprites directory in remonsterate
+            os.mkdir(sprite_directory)
+            print("Sprites directory created in remonsterate.")
+
+        if not os.path.isfile(image_file):
+            # Create the default images_and_tags.txt and monsters_and_tags.txt files
+            with open(os.path.join(os.getcwd(), 'remonsterate\\images_and_tags.txt'), 'w') as text_file:
+                text_file.write(
 '''# This is a sample image list file.
 # This file contains the paths to every sprite that you wish to import randomly.
 # The format is: path/to/file.png:tag1,tag2,tag3
@@ -64,11 +72,12 @@ def update_remonsterate():
 # Examples:
 # sprites/dragon.png:reptile,flying,kickass,boss
 # sprites/unicorn.png'''
-            )
-        print("Template images_and_tags file created in remonsterate.")
+                )
+            print("Template images_and_tags file created in remonsterate.")
 
-        with open(os.path.join(os.getcwd(), 'remonsterate\\monsters_and_tags.txt'), 'w') as text_file:
-            text_file.write(
+        if not os.path.isfile(monster_file):
+            with open(os.path.join(os.getcwd(), 'remonsterate\\monsters_and_tags.txt'), 'w') as text_file:
+                text_file.write(
 '''# This is a sample monster list file.
 # This list is used to whitelist or blacklist specific tags for each monster.
 # It is not necessary to list every monster in the game.
@@ -1239,8 +1248,8 @@ def update_remonsterate():
 
 # __________
 17F:'''
-            )
-        print("Template monsters_and_tags file created in remonsterate.")
+                )
+            print("Template monsters_and_tags file created in remonsterate.")
     except Exception:
         traceback.print_exc()
 
@@ -1273,6 +1282,8 @@ def update_sprites():
 
 def update_beyond_chaos():
     try:
+        print()
+        print()
         print("Would you like to update the Beyond Chaos core files? This will download the latest stable release from "
               "GitHub, replacing the version of Beyond Chaos you are currently running.")
         choice = input("Y/N: ")
