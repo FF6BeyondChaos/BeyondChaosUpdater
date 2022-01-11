@@ -20,19 +20,15 @@ def main():
         print(Constants.CheckINI)
         if Config.checkINI():
             print(Constants.INIFound)
-            # updateBC()
-            update_sprites()
-            Config.writeConfig()
-            print(Constants.UpdaterCompleted)
-            launch_beyond_chaos()
         else:
             print(Constants.NoINI)
             Config.initConfig()
-            update_sprites()
-            update_remonsterate()
-            # update_beyond_chaos()
-            print(Constants.UpdaterCompleted)
-            launch_beyond_chaos()
+        update_sprites()
+        update_remonsterate()
+        update_beyond_chaos()
+        Config.writeConfig()
+        print(Constants.UpdaterCompleted)
+        launch_beyond_chaos()
     except Exception:
         traceback.print_exc()
 
@@ -51,1196 +47,1200 @@ def update_remonsterate():
     try:
         # Create the remonsterate directory in the game directory
         os.mkdir(os.path.join(os.getcwd(), 'remonsterate'))
+        print("Remonsterate directory created.")
 
         # Create the remonsterate sprites directory in remonsterate
         os.mkdir(os.path.join(os.getcwd(), 'remonsterate', 'sprites'))
+        print("Sprites directory created in remonsterate.")
 
         # Create the default images_and_tags.txt and monsters_and_tags.txt files
         with open(os.path.join(os.getcwd(), 'remonsterate\\images_and_tags.txt'), 'w') as text_file:
-            text_file.write('''
-                # This is a sample image list file.
-                # This file contains the paths to every sprite that you wish to import randomly.
-                # The format is: path/to/file.png:tag1,tag2,tag3
-                # You can also omit the tags.
-                #
-                # Examples:
-                # sprites/dragon.png:reptile,flying,kickass,boss
-                # sprites/unicorn.png
-            ''')
+            text_file.write(
+'''# This is a sample image list file.
+# This file contains the paths to every sprite that you wish to import randomly.
+# The format is: path/to/file.png:tag1,tag2,tag3
+# You can also omit the tags.
+#
+# Examples:
+# sprites/dragon.png:reptile,flying,kickass,boss
+# sprites/unicorn.png'''
+            )
+        print("Template images_and_tags file created in remonsterate.")
 
         with open(os.path.join(os.getcwd(), 'remonsterate\\monsters_and_tags.txt'), 'w') as text_file:
-            text_file.write('''
-                # This is a sample monster list file.
-                # This list is used to whitelist or blacklist specific tags for each monster.
-                # It is not necessary to list every monster in the game.
-                #
-                # The format is: monster_index:white_tag1,white_tag2,!black_tag1,!black_tag2
-                #   The monster index is in hexadecimal.
-                #   An exclamation point (!) denotes a blacklisted flag.
-                #
-                # If any tags are whitelisted, that monster can ONLY use sprites with
-                #   ALL of those tags.
-                # If a tag is blacklisted, that monster cannot use ANY sprites with that tag.
-                # These tags only work when using the default randomization functions.
-                #
-                # Examples:
-                # 0:humanoid,!female            # Narshe Guard
-                # 53:town,large,!boss           # HadesGigas
-                # 5d:desert                     # Areneid
-                # 128:humanoid,female,boss      # Goddess
-                
-                # Guard_____
-                000:
-                
-                # Soldier___
-                001:
-                
-                # Templar___
-                002:
-                
-                # Ninja_____
-                003:
+            text_file.write(
+'''# This is a sample monster list file.
+# This list is used to whitelist or blacklist specific tags for each monster.
+# It is not necessary to list every monster in the game.
+#
+# The format is: monster_index:white_tag1,white_tag2,!black_tag1,!black_tag2
+#   The monster index is in hexadecimal.
+#   An exclamation point (!) denotes a blacklisted flag.
+#
+# If any tags are whitelisted, that monster can ONLY use sprites with
+#   ALL of those tags.
+# If a tag is blacklisted, that monster cannot use ANY sprites with that tag.
+# These tags only work when using the default randomization functions.
+#
+# Examples:
+# 0:humanoid,!female            # Narshe Guard
+# 53:town,large,!boss           # HadesGigas
+# 5d:desert                     # Areneid
+# 128:humanoid,female,boss      # Goddess
 
-                # Samurai___
-                004:
+# Guard_____
+000:
 
-                # Orog______
-                005:
+# Soldier___
+001:
 
-                # Mag_Roader
-                006:
+# Templar___
+002:
 
-                # Retainer__
-                007:
+# Ninja_____
+003:
 
-                # Hazer_____
-                008:
+# Samurai___
+004:
 
-                # Dahling___
-                009:
+# Orog______
+005:
 
-                # Rain_Man__
-                00A:
+# Mag_Roader
+006:
 
-                # Brawler___
-                00B:
+# Retainer__
+007:
 
-                # Apokryphos
-                00C:
+# Hazer_____
+008:
 
-                # Dark_Force
-                00D:
+# Dahling___
+009:
 
-                # Whisper___
-                00E:
+# Rain_Man__
+00A:
 
-                # Over_Mind_
-                00F:
+# Brawler___
+00B:
 
-                # Osteosaur_
-                010:
+# Apokryphos
+00C:
 
-                # Commander_
-                011:
+# Dark_Force
+00D:
 
-                # Rhodox____
-                012:
+# Whisper___
+00E:
 
-                # Were_Rat__
-                013:
+# Over_Mind_
+00F:
 
-                # Ursus_____
-                014:
+# Osteosaur_
+010:
 
-                # Rhinotaur_
-                015:
+# Commander_
+011:
 
-                # Steroidite
-                016:
+# Rhodox____
+012:
 
-                # Leafer____
-                017:
+# Were_Rat__
+013:
 
-                # Stray_Cat_
-                018:
+# Ursus_____
+014:
 
-                # Lobo______
-                019:
+# Rhinotaur_
+015:
 
-                # Doberman__
-                01A:
+# Steroidite
+016:
 
-                # Vomammoth_
-                01B:
+# Leafer____
+017:
 
-                # Fidor_____
-                01C:
+# Stray_Cat_
+018:
 
-                # Baskervor_
-                01D:
+# Lobo______
+019:
 
-                # Suriander_
-                01E:
+# Doberman__
+01A:
 
-                # Chimera___
-                01F:
+# Vomammoth_
+01B:
 
-                # Behemoth__
-                020:
+# Fidor_____
+01C:
 
-                # Mesosaur__
-                021:
+# Baskervor_
+01D:
 
-                # Pterodon__
-                022:
+# Suriander_
+01E:
 
-                # FossilFang
-                023:
+# Chimera___
+01F:
 
-                # White_Drgn
-                024:
+# Behemoth__
+020:
 
-                # Doom_Drgn_
-                025:
+# Mesosaur__
+021:
 
-                # Brachosaur
-                026:
+# Pterodon__
+022:
 
-                # Tyranosaur
-                027:
+# FossilFang
+023:
 
-                # Dark_Wind_
-                028:
+# White_Drgn
+024:
 
-                # Beakor____
-                029:
+# Doom_Drgn_
+025:
 
-                # Vulture___
-                02A:
+# Brachosaur
+026:
 
-                # Harpy_____
-                02B:
+# Tyranosaur
+027:
 
-                # HermitCrab
-                02C:
+# Dark_Wind_
+028:
 
-                # Trapper___
-                02D:
+# Beakor____
+029:
 
-                # Hornet____
-                02E:
+# Vulture___
+02A:
 
-                # CrassHoppr
-                02F:
+# Harpy_____
+02B:
 
-                # Delta_Bug_
-                030:
+# HermitCrab
+02C:
 
-                # Gilomantis
-                031:
+# Trapper___
+02D:
 
-                # Trilium___
-                032:
+# Hornet____
+02E:
 
-                # Nightshade
-                033:
+# CrassHoppr
+02F:
 
-                # TumbleWeed
-                034:
+# Delta_Bug_
+030:
 
-                # Bloompire_
-                035:
+# Gilomantis
+031:
 
-                # Trilobiter
-                036:
+# Trilium___
+032:
 
-                # Siegfried_
-                037:
+# Nightshade
+033:
 
-                # Nautiloid_
-                038:
+# TumbleWeed
+034:
 
-                # Exocite___
-                039:
+# Bloompire_
+035:
 
-                # Anguiform_
-                03A:
+# Trilobiter
+036:
 
-                # Reach_Frog
-                03B:
+# Siegfried_
+037:
 
-                # Lizard____
-                03C:
+# Nautiloid_
+038:
 
-                # ChickenLip
-                03D:
+# Exocite___
+039:
 
-                # Hoover____
-                03E:
+# Anguiform_
+03A:
 
-                # Rider_____
-                03F:
+# Reach_Frog
+03B:
 
-                # Chupon____
-                040:
+# Lizard____
+03C:
 
-                # Pipsqueak_
-                041:
+# ChickenLip
+03D:
 
-                # M_TekArmor
-                042:
+# Hoover____
+03E:
 
-                # Sky_Armor_
-                043:
+# Rider_____
+03F:
 
-                # Telstar___
-                044:
+# Chupon____
+040:
 
-                # Lethal_Wpn
-                045:
+# Pipsqueak_
+041:
 
-                # Vaporite__
-                046:
+# M_TekArmor
+042:
 
-                # Flan______
-                047:
+# Sky_Armor_
+043:
 
-                # Ing_______
-                048:
+# Telstar___
+044:
 
-                # Humpty____
-                049:
+# Lethal_Wpn
+045:
 
-                # Brainpan__
-                04A:
+# Vaporite__
+046:
 
-                # Cruller___
-                04B:
+# Flan______
+047:
 
-                # Cactrot___
-                04C:
+# Ing_______
+048:
 
-                # Repo_Man__
-                04D:
+# Humpty____
+049:
 
-                # Harvester_
-                04E:
+# Brainpan__
+04A:
 
-                # Bomb______
-                04F:
+# Cruller___
+04B:
 
-                # Still_Life
-                050:
+# Cactrot___
+04C:
 
-                # Boxed_Set_
-                051:
+# Repo_Man__
+04D:
 
-                # SlamDancer
-                052:
+# Harvester_
+04E:
 
-                # HadesGigas
-                053:
+# Bomb______
+04F:
 
-                # Pug_______
-                054:
+# Still_Life
+050:
 
-                # Magic_Urn_
-                055:
+# Boxed_Set_
+051:
 
-                # Mover_____
-                056:
+# SlamDancer
+052:
 
-                # Figaliz___
-                057:
+# HadesGigas
+053:
 
-                # Buffalax__
-                058:
+# Pug_______
+054:
 
-                # Aspik_____
-                059:
+# Magic_Urn_
+055:
 
-                # Ghost_____
-                05A:
+# Mover_____
+056:
 
-                # Crawler___
-                05B:
+# Figaliz___
+057:
 
-                # Sand_Ray__
-                05C:
+# Buffalax__
+058:
 
-                # Areneid___
-                05D:
+# Aspik_____
+059:
 
-                # Actaneon__
-                05E:
+# Ghost_____
+05A:
 
-                # Sand_Horse
-                05F:
+# Crawler___
+05B:
 
-                # Dark_Side_
-                060:
+# Sand_Ray__
+05C:
 
-                # Mad_Oscar_
-                061:
+# Areneid___
+05D:
 
-                # Crawly____
-                062:
+# Actaneon__
+05E:
 
-                # Bleary____
-                063:
+# Sand_Horse
+05F:
 
-                # Marshal___
-                064:
+# Dark_Side_
+060:
 
-                # Trooper___
-                065:
+# Mad_Oscar_
+061:
 
-                # General___
-                066:
+# Crawly____
+062:
 
-                # Covert____
-                067:
+# Bleary____
+063:
 
-                # Ogor______
-                068:
+# Marshal___
+064:
 
-                # Warlock___
-                069:
+# Trooper___
+065:
 
-                # Madam_____
-                06A:
+# General___
+066:
 
-                # Joker_____
-                06B:
+# Covert____
+067:
 
-                # Iron_Fist_
-                06C:
+# Ogor______
+068:
 
-                # Goblin____
-                06D:
+# Warlock___
+069:
 
-                # Apparite__
-                06E:
+# Madam_____
+06A:
 
-                # PowerDemon
-                06F:
+# Joker_____
+06B:
 
-                # Displayer_
-                070:
+# Iron_Fist_
+06C:
 
-                # Vector_Pup
-                071:
+# Goblin____
+06D:
 
-                # Peepers___
-                072:
+# Apparite__
+06E:
 
-                # Sewer_Rat_
-                073:
+# PowerDemon
+06F:
 
-                # Slatter___
-                074:
+# Displayer_
+070:
 
-                # Rhinox____
-                075:
+# Vector_Pup
+071:
 
-                # Rhobite___
-                076:
+# Peepers___
+072:
 
-                # Wild_Cat__
-                077:
+# Sewer_Rat_
+073:
 
-                # Red_Fang__
-                078:
+# Slatter___
+074:
 
-                # Bounty_Man
-                079:
+# Rhinox____
+075:
 
-                # Tusker____
-                07A:
+# Rhobite___
+076:
 
-                # Ralph_____
-                07B:
+# Wild_Cat__
+077:
 
-                # Chitonid__
-                07C:
+# Red_Fang__
+078:
 
-                # Wart_Puck_
-                07D:
+# Bounty_Man
+079:
 
-                # Rhyos_____
-                07E:
+# Tusker____
+07A:
 
-                # SrBehemoth
-                07F:
+# Ralph_____
+07B:
 
-                # Vectaur___
-                080:
+# Chitonid__
+07C:
 
-                # Wyvern____
-                081:
+# Wart_Puck_
+07D:
 
-                # Zombone___
-                082:
+# Rhyos_____
+07E:
 
-                # Dragon____
-                083:
+# SrBehemoth
+07F:
 
-                # Brontaur__
-                084:
+# Vectaur___
+080:
 
-                # Allosaurus
-                085:
+# Wyvern____
+081:
 
-                # Cirpius___
-                086:
+# Zombone___
+082:
 
-                # Sprinter__
-                087:
+# Dragon____
+083:
 
-                # Gobbler___
-                088:
+# Brontaur__
+084:
 
-                # Harpiai___
-                089:
+# Allosaurus
+085:
 
-                # GloomShell
-                08A:
+# Cirpius___
+086:
 
-                # Drop______
-                08B:
+# Sprinter__
+087:
 
-                # Mind_Candy
-                08C:
+# Gobbler___
+088:
 
-                # WeedFeeder
-                08D:
+# Harpiai___
+089:
 
-                # Luridan___
-                08E:
+# GloomShell
+08A:
 
-                # Toe_Cutter
-                08F:
+# Drop______
+08B:
 
-                # Over_Grunk
-                090:
+# Mind_Candy
+08C:
 
-                # Exoray____
-                091:
+# WeedFeeder
+08D:
 
-                # Crusher___
-                092:
+# Luridan___
+08E:
 
-                # Uroburos__
-                093:
+# Toe_Cutter
+08F:
 
-                # Primordite
-                094:
+# Over_Grunk
+090:
 
-                # Sky_Cap___
-                095:
+# Exoray____
+091:
 
-                # Cephaler__
-                096:
+# Crusher___
+092:
 
-                # Maliga____
-                097:
+# Uroburos__
+093:
 
-                # Gigan_Toad
-                098:
+# Primordite
+094:
 
-                # Geckorex__
-                099:
+# Sky_Cap___
+095:
 
-                # Cluck_____
-                09A:
+# Cephaler__
+096:
 
-                # Land_Worm_
-                09B:
+# Maliga____
+097:
 
-                # Test_Rider
-                09C:
+# Gigan_Toad
+098:
 
-                # PlutoArmor
-                09D:
+# Geckorex__
+099:
 
-                # Tomb_Thumb
-                09E:
+# Cluck_____
+09A:
 
-                # HeavyArmor
-                09F:
+# Land_Worm_
+09B:
 
-                # Chaser____
-                0A0:
+# Test_Rider
+09C:
 
-                # Scullion__
-                0A1:
+# PlutoArmor
+09D:
 
-                # Poplium___
-                0A2:
+# Tomb_Thumb
+09E:
 
-                # Intangir__
-                0A3:
+# HeavyArmor
+09F:
 
-                # Misfit____
-                0A4:
+# Chaser____
+0A0:
 
-                # Eland_____
-                0A5:
+# Scullion__
+0A1:
 
-                # Enuo______
-                0A6:
+# Poplium___
+0A2:
 
-                # Deep_Eye__
-                0A7:
+# Intangir__
+0A3:
 
-                # GreaseMonk
-                0A8:
+# Misfit____
+0A4:
 
-                # NeckHunter
-                0A9:
+# Eland_____
+0A5:
 
-                # Grenade___
-                0AA:
+# Enuo______
+0A6:
 
-                # Critic____
-                0AB:
+# Deep_Eye__
+0A7:
 
-                # Pan_Dora__
-                0AC:
+# GreaseMonk
+0A8:
 
-                # SoulDancer
-                0AD:
+# NeckHunter
+0A9:
 
-                # Gigantos__
-                0AE:
+# Grenade___
+0AA:
 
-                # Mag_Roader
-                0AF:
+# Critic____
+0AB:
 
-                # Spek_Tor__
-                0B0:
+# Pan_Dora__
+0AC:
 
-                # Parasite__
-                0B1:
+# SoulDancer
+0AD:
 
-                # EarthGuard
-                0B2:
+# Gigantos__
+0AE:
 
-                # Coelecite_
-                0B3:
+# Mag_Roader
+0AF:
 
-                # Anemone___
-                0B4:
+# Spek_Tor__
+0B0:
 
-                # Hipocampus
-                0B5:
+# Parasite__
+0B1:
 
-                # Spectre___
-                0B6:
+# EarthGuard
+0B2:
 
-                # Evil_Oscar
-                0B7:
+# Coelecite_
+0B3:
 
-                # Slurm_____
-                0B8:
+# Anemone___
+0B4:
 
-                # Latimeria_
-                0B9:
+# Hipocampus
+0B5:
 
-                # StillGoing
-                0BA:
+# Spectre___
+0B6:
 
-                # Allo_Ver__
-                0BB:
+# Evil_Oscar
+0B7:
 
-                # Phase_____
-                0BC:
+# Slurm_____
+0B8:
 
-                # Outsider__
-                0BD:
+# Latimeria_
+0B9:
 
-                # Barb_e____
-                0BE:
+# StillGoing
+0BA:
 
-                # Parasoul__
-                0BF:
+# Allo_Ver__
+0BB:
 
-                # Pm_Stalker
-                0C0:
+# Phase_____
+0BC:
 
-                # Hemophyte_
-                0C1:
+# Outsider__
+0BD:
 
-                # Sp_Forces_
-                0C2:
+# Barb_e____
+0BE:
 
-                # Nohrabbit_
-                0C3:
+# Parasoul__
+0BF:
 
-                # Wizard____
-                0C4:
+# Pm_Stalker
+0C0:
 
-                # Scrapper__
-                0C5:
+# Hemophyte_
+0C1:
 
-                # Ceritops__
-                0C6:
+# Sp_Forces_
+0C2:
 
-                # Commando__
-                0C7:
+# Nohrabbit_
+0C3:
 
-                # Opinicus__
-                0C8:
+# Wizard____
+0C4:
 
-                # Poppers___
-                0C9:
+# Scrapper__
+0C5:
 
-                # Lunaris___
-                0CA:
+# Ceritops__
+0C6:
 
-                # Garm______
-                0CB:
+# Commando__
+0C7:
 
-                # Vindr_____
-                0CC:
+# Opinicus__
+0C8:
 
-                # Kiwok_____
-                0CD:
+# Poppers___
+0C9:
 
-                # Nastidon__
-                0CE:
+# Lunaris___
+0CA:
 
-                # Rinn______
-                0CF:
+# Garm______
+0CB:
 
-                # Insecare__
-                0D0:
+# Vindr_____
+0CC:
 
-                # Vermin____
-                0D1:
+# Kiwok_____
+0CD:
 
-                # Mantodea__
-                0D2:
+# Nastidon__
+0CE:
 
-                # Bogy______
-                0D3:
+# Rinn______
+0CF:
 
-                # Prussian__
-                0D4:
+# Insecare__
+0D0:
 
-                # Black_Drgn
-                0D5:
+# Vermin____
+0D1:
 
-                # Adamanchyt
-                0D6:
+# Mantodea__
+0D2:
 
-                # Dante_____
-                0D7:
+# Bogy______
+0D3:
 
-                # Wirey_Drgn
-                0D8:
+# Prussian__
+0D4:
 
-                # Dueller___
-                0D9:
+# Black_Drgn
+0D5:
 
-                # Psychot___
-                0DA:
+# Adamanchyt
+0D6:
 
-                # Muus______
-                0DB:
+# Dante_____
+0D7:
 
-                # Karkass___
-                0DC:
+# Wirey_Drgn
+0D8:
 
-                # Punisher__
-                0DD:
+# Dueller___
+0D9:
 
-                # Balloon___
-                0DE:
+# Psychot___
+0DA:
 
-                # Gabbldegak
-                0DF:
+# Muus______
+0DB:
 
-                # GtBehemoth
-                0E0:
+# Karkass___
+0DC:
 
-                # Scorpion__
-                0E1:
+# Punisher__
+0DD:
 
-                # Chaos_Drgn
-                0E2:
+# Balloon___
+0DE:
 
-                # Spit_Fire_
-                0E3:
+# Gabbldegak
+0DF:
 
-                # Vectagoyle
-                0E4:
+# GtBehemoth
+0E0:
 
-                # Lich______
-                0E5:
+# Scorpion__
+0E1:
 
-                # Osprey____
-                0E6:
+# Chaos_Drgn
+0E2:
 
-                # Mag_Roader
-                0E7:
+# Spit_Fire_
+0E3:
 
-                # Bug_______
-                0E8:
+# Vectagoyle
+0E4:
 
-                # Sea_Flower
-                0E9:
+# Lich______
+0E5:
 
-                # Fortis____
-                0EA:
+# Osprey____
+0E6:
 
-                # Abolisher_
-                0EB:
+# Mag_Roader
+0E7:
 
-                # Aquila____
-                0EC:
+# Bug_______
+0E8:
 
-                # Junk______
-                0ED:
+# Sea_Flower
+0E9:
 
-                # Mandrake__
-                0EE:
+# Fortis____
+0EA:
 
-                # 1st_Class_
-                0EF:
+# Abolisher_
+0EB:
 
-                # Tap_Dancer
-                0F0:
+# Aquila____
+0EC:
 
-                # Necromancr
-                0F1:
+# Junk______
+0ED:
 
-                # Borras____
-                0F2:
+# Mandrake__
+0EE:
 
-                # Mag_Roader
-                0F3:
+# 1st_Class_
+0EF:
 
-                # Wild_Rat__
-                0F4:
+# Tap_Dancer
+0F0:
 
-                # Gold_Bear_
-                0F5:
+# Necromancr
+0F1:
 
-                # Innoc_____
-                0F6:
+# Borras____
+0F2:
 
-                # Trixter___
-                0F7:
+# Mag_Roader
+0F3:
 
-                # Red_Wolf__
-                0F8:
+# Wild_Rat__
+0F4:
 
-                # Didalos___
-                0F9:
+# Gold_Bear_
+0F5:
 
-                # Woolly____
-                0FA:
+# Innoc_____
+0F6:
 
-                # Veteran___
-                0FB:
+# Trixter___
+0F7:
 
-                # Sky_Base__
-                0FC:
+# Red_Wolf__
+0F8:
 
-                # IronHitman
-                0FD:
+# Didalos___
+0F9:
 
-                # Io________
-                0FE:
+# Woolly____
+0FA:
 
-                # Pugs______
-                0FF:
+# Veteran___
+0FB:
 
-                # Whelk_____
-                100:
+# Sky_Base__
+0FC:
 
-                # Presenter_
-                101:
+# IronHitman
+0FD:
 
-                # Mega_Armor
-                102:
+# Io________
+0FE:
 
-                # Vargas____
-                103:
+# Pugs______
+0FF:
 
-                # TunnelArmr
-                104:
+# Whelk_____
+100:
 
-                # Prometheus
-                105:
+# Presenter_
+101:
 
-                # GhostTrain
-                106:
+# Mega_Armor
+102:
 
-                # Dadaluma__
-                107:
+# Vargas____
+103:
 
-                # Shiva_____
-                108:
+# TunnelArmr
+104:
 
-                # Ifrit_____
-                109:
+# Prometheus
+105:
 
-                # Number_024
-                10A:
+# GhostTrain
+106:
 
-                # Number_128
-                10B:
+# Dadaluma__
+107:
 
-                # Inferno___
-                10C:
+# Shiva_____
+108:
 
-                # Crane_____
-                10D:
+# Ifrit_____
+109:
 
-                # Crane_____
-                10E:
+# Number_024
+10A:
 
-                # Umaro_____
-                10F:
+# Number_128
+10B:
 
-                # Umaro_____
-                110:
+# Inferno___
+10C:
 
-                # Guardian__
-                111:
+# Crane_____
+10D:
 
-                # Guardian__
-                112:
+# Crane_____
+10E:
 
-                # Air_Force_
-                113:
+# Umaro_____
+10F:
 
-                # Tritoch___
-                114:
+# Umaro_____
+110:
 
-                # Tritoch___
-                115:
+# Guardian__
+111:
 
-                # FlameEater
-                116:
+# Guardian__
+112:
 
-                # AtmaWeapon
-                117:
+# Air_Force_
+113:
 
-                # Nerapa____
-                118:
+# Tritoch___
+114:
 
-                # SrBehemoth
-                119:
+# Tritoch___
+115:
 
-                # Kefka_____
-                11A:
+# FlameEater
+116:
 
-                # Tentacle__
-                11B:
+# AtmaWeapon
+117:
 
-                # Dullahan__
-                11C:
+# Nerapa____
+118:
 
-                # Doom_Gaze_
-                11D:
+# SrBehemoth
+119:
 
-                # Chadarnook
-                11E:
+# Kefka_____
+11A:
 
-                # Curley____
-                11F:
+# Tentacle__
+11B:
 
-                # Larry_____
-                120:
+# Dullahan__
+11C:
 
-                # Moe_______
-                121:
+# Doom_Gaze_
+11D:
 
-                # Wrexsoul__
-                122:
+# Chadarnook
+11E:
 
-                # Hidon_____
-                123:
+# Curley____
+11F:
 
-                # KatanaSoul
-                124:
+# Larry_____
+120:
 
-                # L_30_Magic
-                125:
+# Moe_______
+121:
 
-                # Hidonite__
-                126:
+# Wrexsoul__
+122:
 
-                # Doom______
-                127:
+# Hidon_____
+123:
 
-                # Goddess___
-                128:
+# KatanaSoul
+124:
 
-                # Poltrgeist
-                129:
+# L_30_Magic
+125:
 
-                # Kefka_____
-                12A:false_kefka_do_not_replace
+# Hidonite__
+126:
 
-                # L_40_Magic
-                12B:
+# Doom______
+127:
 
-                # Ultros____
-                12C:
+# Goddess___
+128:
 
-                # Ultros____
-                12D:
+# Poltrgeist
+129:
 
-                # Ultros____
-                12E:
+# Kefka_____
+12A:false_kefka_do_not_replace
 
-                # Chupon____
-                12F:
+# L_40_Magic
+12B:
 
-                # L_20_Magic
-                130:
+# Ultros____
+12C:
 
-                # Siegfried_
-                131:
+# Ultros____
+12D:
 
-                # L_10_Magic
-                132:
+# Ultros____
+12E:
 
-                # L_50_Magic
-                133:
+# Chupon____
+12F:
 
-                # Head______
-                134:
+# L_20_Magic
+130:
 
-                # Whelk_Head
-                135:
+# Siegfried_
+131:
 
-                # Colossus__
-                136:
+# L_10_Magic
+132:
 
-                # CzarDragon
-                137:
+# L_50_Magic
+133:
 
-                # Master_Pug
-                138:
+# Head______
+134:
 
-                # L_60_Magic
-                139:
+# Whelk_Head
+135:
 
-                # Merchant__
-                13A:
+# Colossus__
+136:
 
-                # B_Day_Suit
-                13B:
+# CzarDragon
+137:
 
-                # Tentacle__
-                13C:
+# Master_Pug
+138:
 
-                # Tentacle__
-                13D:
+# L_60_Magic
+139:
 
-                # Tentacle__
-                13E:
+# Merchant__
+13A:
 
-                # RightBlade
-                13F:
+# B_Day_Suit
+13B:
 
-                # Left_Blade
-                140:
+# Tentacle__
+13C:
 
-                # Rough_____
-                141:
+# Tentacle__
+13D:
 
-                # Striker___
-                142:
+# Tentacle__
+13E:
 
-                # L_70_Magic
-                143:
+# RightBlade
+13F:
 
-                # Tritoch___
-                144:
+# Left_Blade
+140:
 
-                # Laser_Gun_
-                145:
+# Rough_____
+141:
 
-                # Speck_____
-                146:
+# Striker___
+142:
 
-                # MissileBay
-                147:
+# L_70_Magic
+143:
 
-                # Chadarnook
-                148:
+# Tritoch___
+144:
 
-                # Ice_Dragon
-                149:
+# Laser_Gun_
+145:
 
-                # Kefka_____
-                14A:
+# Speck_____
+146:
 
-                # Storm_Drgn
-                14B:
+# MissileBay
+147:
 
-                # Dirt_Drgn_
-                14C:
+# Chadarnook
+148:
 
-                # Ipooh_____
-                14D:
+# Ice_Dragon
+149:
 
-                # Leader____
-                14E:
+# Kefka_____
+14A:
 
-                # Grunt_____
-                14F:
+# Storm_Drgn
+14B:
 
-                # Gold_Drgn_
-                150:
+# Dirt_Drgn_
+14C:
 
-                # Skull_Drgn
-                151:
+# Ipooh_____
+14D:
 
-                # Blue_Drgn_
-                152:
+# Leader____
+14E:
 
-                # Red_Dragon
-                153:
+# Grunt_____
+14F:
 
-                # Piranha___
-                154:
+# Gold_Drgn_
+150:
 
-                # Rizopas___
-                155:
+# Skull_Drgn
+151:
 
-                # Specter___
-                156:
+# Blue_Drgn_
+152:
 
-                # Short_Arm_
-                157:
+# Red_Dragon
+153:
 
-                # Long_Arm__
-                158:
+# Piranha___
+154:
 
-                # Face______
-                159:
+# Rizopas___
+155:
 
-                # Tiger_____
-                15A:
+# Specter___
+156:
 
-                # Tools_____
-                15B:
+# Short_Arm_
+157:
 
-                # Magic_____
-                15C:
+# Long_Arm__
+158:
 
-                # Hit_______
-                15D:
+# Face______
+159:
 
-                # Girl______
-                15E:
+# Tiger_____
+15A:
 
-                # Sleep_____
-                15F:
+# Tools_____
+15B:
 
-                # Hidonite__
-                160:
+# Magic_____
+15C:
 
-                # Hidonite__
-                161:
+# Hit_______
+15D:
 
-                # Hidonite__
-                162:
+# Girl______
+15E:
 
-                # L_80_Magic
-                163:
+# Sleep_____
+15F:
 
-                # L_90_Magic
-                164:
+# Hidonite__
+160:
 
-                # ProtoArmor
-                165:
+# Hidonite__
+161:
 
-                # MagiMaster
-                166:
+# Hidonite__
+162:
 
-                # SoulSaver_
-                167:
+# L_80_Magic
+163:
 
-                # Ultros____
-                168:
+# L_90_Magic
+164:
 
-                # Naughty___
-                169:
+# ProtoArmor
+165:
 
-                # Phunbaba__
-                16A:
+# MagiMaster
+166:
 
-                # Phunbaba__
-                16B:
+# SoulSaver_
+167:
 
-                # Phunbaba__
-                16C:
+# Ultros____
+168:
 
-                # Phunbaba__
-                16D:
+# Naughty___
+169:
 
-                # __________
-                16E:
+# Phunbaba__
+16A:
 
-                # __________
-                16F:
+# Phunbaba__
+16B:
 
-                # __________
-                170:
+# Phunbaba__
+16C:
 
-                # Zone_Eater
-                171:
+# Phunbaba__
+16D:
 
-                # __________
-                172:
+# __________
+16E:
 
-                # __________
-                173:
+# __________
+16F:
 
-                # __________
-                174:
+# __________
+170:
 
-                # Officer___
-                175:
+# Zone_Eater
+171:
 
-                # Cadet_____
-                176:
+# __________
+172:
 
-                # __________
-                177:
+# __________
+173:
 
-                # __________
-                178:
+# __________
+174:
 
-                # Soldier___
-                179:
+# Officer___
+175:
 
-                # __________
-                17A:
+# Cadet_____
+176:
 
-                # __________
-                17B:
+# __________
+177:
 
-                # __________
-                17C:
+# __________
+178:
 
-                # Atma______
-                17D:
+# Soldier___
+179:
 
-                # __________
-                17E:
+# __________
+17A:
 
-                # __________
-                17F:
-            ''')
+# __________
+17B:
+
+# __________
+17C:
+
+# Atma______
+17D:
+
+# __________
+17E:
+
+# __________
+17F:'''
+            )
+        print("Template monsters_and_tags file created in remonsterate.")
     except Exception:
         traceback.print_exc()
 
@@ -1248,7 +1248,7 @@ def update_remonsterate():
 def update_sprites():
     try:
         my_file = Path('Sprites.zip')
-        if my_file.is_file() == False:
+        if not my_file.is_file():
             # go get the sprites
             # ping github and get the new released version
             x = requests.get('https://api.github.com/repos/FF6BeyondChaos/BeyondChaosSprites/releases/latest').json()
@@ -1273,27 +1273,33 @@ def update_sprites():
 
 def update_beyond_chaos():
     try:
-        print(Constants.UpdateBC)
-        my_file = Path('BeyondChaos.zip')
-        if my_file.is_file() == False:
-            # go get the sprites
-            # ping github and get the new released version
-            x = requests.get('https://api.github.com/repos/FF6BeyondChaos/BeyondChaosRandomizer/releases/latest').json()
-            # get the link to download the latest package
-            download_link = x['assets'][0]['browser_download_url']
-            # download the file and save it.
-            local_filename = download_link.split('/')[-1]
-            with requests.get(download_link, stream=True) as r:
-                with open(local_filename, 'wb') as f:
-                    shutil.copyfileobj(r.raw, f)
-            time.sleep(3)
+        print("Would you like to update the Beyond Chaos core files? This will download the latest stable release from "
+              "GitHub, replacing the version of Beyond Chaos you are currently running.")
+        choice = input("Y/N: ")
+        if choice.lower() == "y":
+            print(Constants.UpdateBC)
+            my_file = Path('BeyondChaos.zip')
+            if not my_file.is_file():
+                # go get the sprites
+                # ping github and get the new released version
+                x = requests.get('https://api.github.com/repos/FF6BeyondChaos/BeyondChaosRandomizer/releases/latest').json()
+                # get the link to download the latest package
+                download_link = x['assets'][0]['browser_download_url']
+                # download the file and save it.
+                local_filename = download_link.split('/')[-1]
+                with requests.get(download_link, stream=True) as r:
+                    with open(local_filename, 'wb') as f:
+                        shutil.copyfileobj(r.raw, f)
+                time.sleep(3)
 
-        with ZipFile('BeyondChaos.zip', 'r') as zipObj:
-            # Extract all the contents of zip file in different directory
-            zipObj.extractall(os.getcwd())
-            # wait 3 seconds
-            time.sleep(3)
-            print(Constants.UpdateBCDone)
+            with ZipFile('BeyondChaos.zip', 'r') as zipObj:
+                # Extract all the contents of zip file in different directory
+                zipObj.extractall(os.getcwd())
+                # wait 3 seconds
+                time.sleep(3)
+                print(Constants.UpdateBCDone)
+        else:
+            print("Core update skipped.")
     except Exception:
         traceback.print_exc()
 
