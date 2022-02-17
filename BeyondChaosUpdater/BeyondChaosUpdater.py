@@ -44,6 +44,7 @@ def launch_beyond_chaos():
 
 
 def update_remonsterate():
+
     try:
         # Create the remonsterate directory in the game directory
         base_directory = os.path.join(os.getcwd(), 'remonsterate')
@@ -60,10 +61,45 @@ def update_remonsterate():
             os.mkdir(sprite_directory)
             print("Sprites directory created in remonsterate.")
 
-        if not os.path.isfile(image_file):
-            # Create the default images_and_tags.txt and monsters_and_tags.txt files
+        update_monster_sprites()
+
+        #Generate images_and_tags.txt file for remonsterate based on the sprites in the sprites folder
+
+        try:
+            # Populate the file name lists. Iterates through directories starting in the
+            #   remonsterate directory. Does not traverse directories past
+            #   the depth specified by walk_distance.
+            walk_distance = 4
+            sprite_directory_level = sprite_directory.count(os.path.sep)
+            spritelist = ""
+            print("Looking for and analyzing png files in " + sprite_directory + " and " + str(walk_distance) +
+                " levels of sub-directories.")
+            for root, dirs, files in os.walk(sprite_directory):
+                current_walking_directory = os.path.abspath(root)
+                current_directory_level = current_walking_directory.count(os.path.sep)
+
+                if current_directory_level > sprite_directory_level + walk_distance:
+                    # del dirs[:] empties the list that os.walk uses to determine what
+                    #   directories to walk through, meaning os.walk will move on to
+                    #   the next directory. It does NOT delete or modify files on the
+                    #   hard drive.
+                    if len(dirs) > 0:
+                        print("There were additional unexplored directories in " + current_walking_directory + ".")
+                    del dirs[:]
+                else:
+                    for file_name in files:
+                        if file_name.endswith(".png"):
+                            spritelist += str(file_name[len(sprite_directory):]) + "\n"
+
             with open(os.path.join(os.getcwd(), 'remonsterate\\images_and_tags.txt'), 'w') as text_file:
-                text_file.write(
+                text_file.write(spritelist)
+            print("New images_and_tags file created in remonsterate.")
+
+        except IOError as e:
+            if not os.path.isfile(image_file):
+                # Create the default images_and_tags.txt and monsters_and_tags.txt files
+                with open(os.path.join(os.getcwd(), 'remonsterate\\images_and_tags.txt'), 'w') as text_file:
+                    text_file.write(
 '''# This is a sample image list file.
 # This file contains the paths to every sprite that you wish to import randomly.
 # The format is: path/to/file.png:tag1,tag2,tag3
@@ -72,8 +108,8 @@ def update_remonsterate():
 # Examples:
 # sprites/dragon.png:reptile,flying,kickass,boss
 # sprites/unicorn.png'''
-                )
-            print("Template images_and_tags file created in remonsterate.")
+                    )
+                print("Template images_and_tags file created in remonsterate.")
 
         if not os.path.isfile(monster_file):
             with open(os.path.join(os.getcwd(), 'remonsterate\\monsters_and_tags.txt'), 'w') as text_file:
@@ -1253,7 +1289,6 @@ def update_remonsterate():
     except Exception:
         traceback.print_exc()
 
-
 def update_sprites():
     try:
         my_file = Path('Sprites.zip')
@@ -1279,6 +1314,30 @@ def update_sprites():
     except Exception:
         traceback.print_exc()
 
+def update_monster_sprites():
+    try:
+        my_file = Path('MonsterSprites.zip')
+        if not my_file.is_file():
+            # go get the sprites
+            # ping github and get the new released version
+            x = requests.get('https://api.github.com/repos/FF6BeyondChaos/BeyondChaosMonsterSprites/releases/latest').json()
+            # get the link to download the latest package
+            download_link = x['assets'][0]['browser_download_url']
+            # download the file and save it.
+            local_filename = download_link.split('/')[-1]
+            with requests.get(download_link, stream=True) as r:
+                with open(local_filename, 'wb') as f:
+                    shutil.copyfileobj(r.raw, f)
+            time.sleep(3)
+        with ZipFile('MonsterSprites.zip', 'r') as zipObj:
+            print(Constants.UpdateMonsterSprites)
+            # Extract all the contents of zip file in different directory
+            zipObj.extractall(os.path.join(os.getcwd(), 'Remonsterate/sprites'))
+            # wait 3 seconds
+            time.sleep(3)
+            print(Constants.UpdateMonsterSpriteDoneSpriteDone)
+    except Exception:
+        traceback.print_exc()
 
 def update_beyond_chaos():
     try:
