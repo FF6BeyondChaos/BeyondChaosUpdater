@@ -89,8 +89,7 @@ def update_remonsterate():
                 else:
                     for file_name in files:
                         if file_name.endswith(".png"):
-                            spritelist += str(file_name[len(sprite_directory):]) + "\n"
-
+                            spritelist += str(os.path.join(root, file_name))[len(sprite_directory) + 1:] + "\n"
             with open(os.path.join(os.getcwd(), 'remonsterate\\images_and_tags.txt'), 'w') as text_file:
                 text_file.write(spritelist)
             print("New images_and_tags file created in remonsterate.")
