@@ -69,7 +69,7 @@ def update_remonsterate():
             # Populate the file name lists. Iterates through directories starting in the
             #   remonsterate directory. Does not traverse directories past
             #   the depth specified by walk_distance.
-            walk_distance = 4
+            walk_distance = 6
             sprite_directory_level = sprite_directory.count(os.path.sep)
             spritelist = ""
             print("Looking for and analyzing png files in " + sprite_directory + " and " + str(walk_distance) +
