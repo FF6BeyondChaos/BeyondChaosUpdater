@@ -13,6 +13,7 @@ def writeConfig():
     try:
         coreVersion = getCoreVersion()
         spriteVersion = getSpriteVersion()
+        monsterSpriteVersion = getMonsterSpriteVersion()
         config.read(Path(os.getcwd()+"/config.ini"))
         try:
             config.add_section('Version')
@@ -22,6 +23,7 @@ def writeConfig():
             print("Version Section already exists, skipping adding it")
         config.set('Version', 'Core', coreVersion)
         config.set('Version', 'Sprite', spriteVersion)
+        config.set('Version', 'Monster Sprite', monsterSpriteVersion)
         #config.set('main', 'key3', 'value3')
 
         with open(Path(os.getcwd()+"/config.ini"), 'w') as f:
@@ -50,6 +52,14 @@ def initConfig():
 def getSpriteVersion():
     try:
         x = requests.get('https://api.github.com/repos/FF6BeyondChaos/BeyondChaosSprites/releases/latest').json()   
+        version = x['tag_name']
+        return version
+    except Exception:
+        traceback.print_exc()
+
+def getMonsterSpriteVersion():
+    try:
+        x = requests.get('https://api.github.com/repos/FF6BeyondChaos/BeyondChaosMonsterSprites/releases/latest').json()
         version = x['tag_name']
         return version
     except Exception:
