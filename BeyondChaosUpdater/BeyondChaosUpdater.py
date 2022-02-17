@@ -1332,10 +1332,10 @@ def update_monster_sprites():
         with ZipFile('MonsterSprites.zip', 'r') as zipObj:
             print(Constants.UpdateMonsterSprites)
             # Extract all the contents of zip file in different directory
-            zipObj.extractall(os.path.join(os.getcwd(), 'Remonsterate/sprites'))
+            zipObj.extractall(os.path.join(os.getcwd(), 'Remonsterate'))
             # wait 3 seconds
             time.sleep(3)
-            print(Constants.UpdateMonsterSpriteDoneSpriteDone)
+            print(Constants.UpdateMonsterSpriteDone)
     except Exception:
         traceback.print_exc()
 
