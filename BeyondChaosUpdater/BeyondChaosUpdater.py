@@ -88,7 +88,7 @@ def update_remonsterate():
                     del dirs[:]
                 else:
                     for file_name in files:
-                        if file_name.endswith(".png"):
+                        if file_name.lower().endswith(".png"):
                             spritelist += str(os.path.join(root, file_name))[len(sprite_directory) + 1:] + "\n"
             with open(os.path.join(os.getcwd(), 'remonsterate\\images_and_tags.txt'), 'w') as text_file:
                 text_file.write(spritelist)
