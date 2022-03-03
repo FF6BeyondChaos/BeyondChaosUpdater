@@ -9,11 +9,11 @@ config = ConfigParser(strict=False)
 #the updater only will set the version...
 
 
-def writeConfig():
+def createConfig():
     try:
-        coreVersion = getCoreVersion()
-        spriteVersion = getSpriteVersion()
-        monsterSpriteVersion = getMonsterSpriteVersion()
+        coreVersion = 0
+        spriteVersion = 0
+        monsterSpriteVersion = 0
         config.read(Path(os.getcwd()+"/config.ini"))
         try:
             config.add_section('Version')
@@ -31,6 +31,12 @@ def writeConfig():
     except Exception:
         traceback.print_exc()
 
+def writeConfig():
+    try:
+        with open(Path(os.getcwd() + "/config.ini"), 'w') as f:
+            config.write(f)
+    except Exception:
+        traceback.print_exc()
 
 def checkINI():
     try:
@@ -45,7 +51,7 @@ def checkINI():
 
 def initConfig():
     try:
-        writeConfig()
+        createConfig()
     except Exception:
         traceback.print_exc()
 
@@ -68,6 +74,14 @@ def getMonsterSpriteVersion():
 def getCoreVersion():
     try:
         x = requests.get('https://api.github.com/repos/FF6BeyondChaos/BeyondChaosRandomizer/releases/latest').json()   
+        version = x['tag_name']
+        return version
+    except Exception:
+        traceback.print_exc()
+
+def getUpdaterVersion():
+    try:
+        x = requests.get('https://api.github.com/repos/FF6BeyondChaos/BeyondChaosUpdater/releases/latest').json()
         version = x['tag_name']
         return version
     except Exception:

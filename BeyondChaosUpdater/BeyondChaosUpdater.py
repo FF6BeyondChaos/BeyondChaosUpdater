@@ -3,16 +3,17 @@ import subprocess
 import Constants
 import Config
 import requests
-import time
 import shutil
 import os
 import time
 import traceback
+import sys
 from pathlib import Path
 
 
 def main():
     try:
+        version = "1.2.0"
         print(Constants.UpdaterLaunched)
         # wait 3 seconds
         print(Constants.wait)
@@ -20,18 +21,42 @@ def main():
         print(Constants.CheckINI)
         if Config.checkINI():
             print(Constants.INIFound)
+            Config.config.read(Path(os.getcwd() + "/config.ini"))
         else:
             print(Constants.NoINI)
             Config.initConfig()
-        update_sprites()
-        update_remonsterate()
-        update_beyond_chaos()
+
+        print(Constants.CheckUpdater)
+        if version != Config.getUpdaterVersion():
+            update_updater()
+            time.sleep(10)
+            sys.exit()
+        else:
+            print(Constants.NoUpdate)
+
+        print(Constants.CheckUpdateBC)
+        if (Config.config.get('Version', 'Core')) != Config.getCoreVersion():
+            update_beyond_chaos()
+        else:
+            print(Constants.NoUpdate)
+
+        print(Constants.CheckUpdateSprites)
+        if (Config.config.get('Version', 'Sprite')) != Config.getSpriteVersion():
+            update_sprites()
+        else:
+            print(Constants.NoUpdate)
+
+        print(Constants.CheckUpdateMonsterSprites)
+        if (Config.config.get('Version', 'Monster Sprite')) != Config.getMonsterSpriteVersion():
+            update_remonsterate()
+        else:
+            print(Constants.NoUpdate)
+
         Config.writeConfig()
         print(Constants.UpdaterCompleted)
         launch_beyond_chaos()
     except Exception:
         traceback.print_exc()
-
 
 def launch_beyond_chaos():
     try:
@@ -41,7 +66,6 @@ def launch_beyond_chaos():
         time.sleep(3)
     except Exception:
         traceback.print_exc()
-
 
 def update_remonsterate():
 
@@ -1309,6 +1333,7 @@ def update_sprites():
             zipObj.extractall(os.path.join(os.getcwd(), 'custom'))
             # wait 3 seconds
             time.sleep(3)
+            Config.config.set('Version', 'Sprite', x['tag_name'])
             print(Constants.UpdateSpriteDone)
     except Exception:
         traceback.print_exc()
@@ -1334,6 +1359,7 @@ def update_monster_sprites():
             zipObj.extractall(os.path.join(os.getcwd(), 'Remonsterate'))
             # wait 3 seconds
             time.sleep(3)
+            Config.config.set('Version', 'Monster Sprite', x['tag_name'])
             print(Constants.UpdateMonsterSpriteDone)
     except Exception:
         traceback.print_exc()
@@ -1366,9 +1392,28 @@ def update_beyond_chaos():
                 zipObj.extractall(os.getcwd())
                 # wait 3 seconds
                 time.sleep(3)
+                Config.config.set('Version', 'Core', x['tag_name'])
                 print(Constants.UpdateBCDone)
         else:
             print("Core update skipped.")
+    except Exception:
+        traceback.print_exc()
+
+def update_updater():
+    try:
+        print(Constants.UpdateUpdater)
+        # ping github and get the new released version
+        x = requests.get('https://api.github.com/repos/FF6BeyondChaos/BeyondChaosUpdater/releases/latest').json()
+        # get the link to download the latest package
+        download_link = x['assets'][0]['browser_download_url']
+        # download the file and save it.
+        local_filename = download_link.split('/')[-1]
+        with requests.get(download_link, stream=True) as r:
+            with open(local_filename, 'wb') as f:
+                shutil.copyfileobj(r.raw, f)
+        time.sleep(5)
+        print(Constants.UpdateUpdaterDone)
+
     except Exception:
         traceback.print_exc()
 
