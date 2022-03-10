@@ -13,7 +13,7 @@ from pathlib import Path
 
 def main():
     try:
-        version = "1.2.0"
+        version = "1.3.0"
         print(Constants.UpdaterLaunched)
         # wait 3 seconds
         print(Constants.wait)
