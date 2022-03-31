@@ -37,8 +37,11 @@ _ASSET_URLS = {
     "monster_sprite": os.path.join(_BASE_PROJ_URL, 'BeyondChaosMonsterSprites/releases/latest')
 }
 def get_version(asset):
-    # TODO: check request result
-    x = requests.get(_ASSET_URLS[asset]).json()
+    resp = requests.get(_ASSET_URLS[asset])
+    # check request result
+    if not resp.ok:
+        sys.exit(f"GitHub returned a bad response. Details:\n{resp.reason}")
+    x = resp.json()
     return x['tag_name']
 
 def update_version(asset, dst=None):
