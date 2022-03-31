@@ -119,6 +119,7 @@ def main(config_path=Path(os.path.join(os.getcwd(), "config.ini"))):
     else:
         print("No config file found, running first setup please wait.")
         write_default_config(config_path)
+        config.read(config_path)
 
     print("Updater is checking for a new version of the randomizer updater")
     if __version__ != get_version("updater"):
