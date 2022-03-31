@@ -1,12 +1,18 @@
 from zipfile import ZipFile
 from configparser import ConfigParser
-import requests
 import shutil
 import os
 import time
 import sys
 import tempfile
 from pathlib import Path
+
+# This is not part of the stdlib
+try:
+    import requests
+except ImportError:
+    sys.exit("Please install the `requests` python package "
+             "before running updater. Try `pip install requests`.")
 
 import remonstrate_utils
 
