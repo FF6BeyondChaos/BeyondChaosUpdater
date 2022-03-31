@@ -1314,19 +1314,19 @@ def update_remonsterate():
 
 def update_sprites():
     try:
-        my_file = Path('Sprites.zip')
-        if not my_file.is_file():
-            # go get the sprites
-            # ping github and get the new released version
-            x = requests.get('https://api.github.com/repos/FF6BeyondChaos/BeyondChaosSprites/releases/latest').json()
-            # get the link to download the latest package
-            download_link = x['assets'][0]['browser_download_url']
-            # download the file and save it.
-            local_filename = download_link.split('/')[-1]
-            with requests.get(download_link, stream=True) as r:
-                with open(local_filename, 'wb') as f:
-                    shutil.copyfileobj(r.raw, f)
-            time.sleep(3)
+        # my_file = Path('Sprites.zip')
+        # if not my_file.is_file():
+        # go get the sprites
+        # ping github and get the new released version
+        x = requests.get('https://api.github.com/repos/FF6BeyondChaos/BeyondChaosSprites/releases/latest').json()
+        # get the link to download the latest package
+        download_link = x['assets'][0]['browser_download_url']
+        # download the file and save it.
+        local_filename = download_link.split('/')[-1]
+        with requests.get(download_link, stream=True) as r:
+            with open(local_filename, 'wb') as f:
+                shutil.copyfileobj(r.raw, f)
+        time.sleep(3)
         with ZipFile('Sprites.zip', 'r') as zipObj:
             print(Constants.UpdateSprites)
             # Extract all the contents of zip file in different directory
@@ -1340,19 +1340,19 @@ def update_sprites():
 
 def update_monster_sprites():
     try:
-        my_file = Path('MonsterSprites.zip')
-        if not my_file.is_file():
-            # go get the sprites
-            # ping github and get the new released version
-            x = requests.get('https://api.github.com/repos/FF6BeyondChaos/BeyondChaosMonsterSprites/releases/latest').json()
-            # get the link to download the latest package
-            download_link = x['assets'][0]['browser_download_url']
-            # download the file and save it.
-            local_filename = download_link.split('/')[-1]
-            with requests.get(download_link, stream=True) as r:
-                with open(local_filename, 'wb') as f:
-                    shutil.copyfileobj(r.raw, f)
-            time.sleep(3)
+        # my_file = Path('MonsterSprites.zip')
+        # if not my_file.is_file():
+        # go get the sprites
+        # ping github and get the new released version
+        x = requests.get('https://api.github.com/repos/FF6BeyondChaos/BeyondChaosMonsterSprites/releases/latest').json()
+        # get the link to download the latest package
+        download_link = x['assets'][0]['browser_download_url']
+        # download the file and save it.
+        local_filename = download_link.split('/')[-1]
+        with requests.get(download_link, stream=True) as r:
+            with open(local_filename, 'wb') as f:
+                shutil.copyfileobj(r.raw, f)
+        time.sleep(3)
         with ZipFile('MonsterSprites.zip', 'r') as zipObj:
             print(Constants.UpdateMonsterSprites)
             # Extract all the contents of zip file in different directory
@@ -1373,19 +1373,19 @@ def update_beyond_chaos():
         choice = input("Y/N: ")
         if choice.lower() == "y":
             print(Constants.UpdateBC)
-            my_file = Path('BeyondChaos.zip')
-            if not my_file.is_file():
-                # go get the sprites
-                # ping github and get the new released version
-                x = requests.get('https://api.github.com/repos/FF6BeyondChaos/BeyondChaosRandomizer/releases/latest').json()
-                # get the link to download the latest package
-                download_link = x['assets'][0]['browser_download_url']
-                # download the file and save it.
-                local_filename = download_link.split('/')[-1]
-                with requests.get(download_link, stream=True) as r:
-                    with open(local_filename, 'wb') as f:
-                        shutil.copyfileobj(r.raw, f)
-                time.sleep(3)
+            # my_file = Path('BeyondChaos.zip')
+            # if not my_file.is_file():
+            # go get the sprites
+            # ping github and get the new released version
+            x = requests.get('https://api.github.com/repos/FF6BeyondChaos/BeyondChaosRandomizer/releases/latest').json()
+            # get the link to download the latest package
+            download_link = x['assets'][0]['browser_download_url']
+            # download the file and save it.
+            local_filename = download_link.split('/')[-1]
+            with requests.get(download_link, stream=True) as r:
+                with open(local_filename, 'wb') as f:
+                    shutil.copyfileobj(r.raw, f)
+            time.sleep(3)
 
             with ZipFile('BeyondChaos.zip', 'r') as zipObj:
                 # Extract all the contents of zip file in different directory
