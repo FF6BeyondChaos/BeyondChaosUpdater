@@ -31,10 +31,10 @@ def write_default_config(fname="config.ini"):
 
 _BASE_PROJ_URL = 'https://api.github.com/repos/FF6BeyondChaos/'
 _ASSET_URLS = {
-    "updater": 'https://api.github.com/repos/FF6BeyondChaos/BeyondChaosUpdater/releases/latest',
-    "core": 'https://api.github.com/repos/FF6BeyondChaos/BeyondChaosRandomizer/releases/latest',
-    "sprite": 'https://api.github.com/repos/FF6BeyondChaos/BeyondChaosSprites/releases/latest',
-    "monster_sprite": 'https://api.github.com/repos/FF6BeyondChaos/BeyondChaosMonsterSprites/releases/latest'
+    "updater": os.path.join(_BASE_PROJ_URL, 'BeyondChaosUpdater/releases/latest'),
+    "core": os.path.join(_BASE_PROJ_URL, 'BeyondChaosRandomizer/releases/latest'),
+    "sprite": os.path.join(_BASE_PROJ_URL, 'BeyondChaosSprites/releases/latest'),
+    "monster_sprite": os.path.join(_BASE_PROJ_URL, 'BeyondChaosMonsterSprites/releases/latest')
 }
 def get_version(asset):
     # TODO: check request result
