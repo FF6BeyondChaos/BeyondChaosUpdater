@@ -31,9 +31,8 @@ _ASSET_URLS = {
 }
 def get_version(asset):
     # TODO: check request result
-    x = requests.get(_ASSET_URLS[asset])
-    version = x['tag_name']
-    return version
+    x = requests.get(_ASSET_URLS[asset]).json()
+    return x['tag_name']
 
 def update_version(asset, dst=None):
     x = requests.get(_ASSET_URLS[asset]).json()
