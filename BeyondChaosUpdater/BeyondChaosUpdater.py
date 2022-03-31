@@ -63,7 +63,7 @@ def update_updater():
 
 def update_monster_sprites(config):
     print("Updater is updating the randomizer monster sprites")
-    _, tag = update_version("sprite", "remonstrate")
+    _, tag = update_version("sprite", "remonsterate")
     config.set('Version', 'Monster Sprite', tag)
     print("Updater has updated the randomizer monster sprites")
 
@@ -79,7 +79,7 @@ def update_beyond_chaos(config):
           "GitHub, replacing the version of Beyond Chaos you are currently running.")
     choice = input("Y/N: ")
     if choice.lower() == "y":
-        _, tag = update_version("core", config)
+        _, tag = update_version("core")
         config.set('Version', 'Core', tag)
         print("Updater has updated the randomizer core")
     else:
