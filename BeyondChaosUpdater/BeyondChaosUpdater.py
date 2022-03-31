@@ -5,6 +5,7 @@ import shutil
 import os
 import time
 import sys
+import tempfile
 from pathlib import Path
 
 import remonstrate_utils
@@ -39,7 +40,8 @@ def update_version(asset, dst=None):
     # get the link to download the latest package
     download_link = x['assets'][0]['browser_download_url']
     # download the file and save it.
-    local_filename = download_link.split('/')[-1]
+    tmpdir = tempfile.mkdtemp()
+    local_filename = os.path.join(tmpdir, download_link.split('/')[-1])
     with requests.get(download_link, stream=True) as r:
         with open(local_filename, 'wb') as f:
             shutil.copyfileobj(r.raw, f)
