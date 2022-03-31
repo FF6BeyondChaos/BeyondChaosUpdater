@@ -1,3 +1,4 @@
+import platform
 from zipfile import ZipFile
 from configparser import ConfigParser
 import shutil
@@ -63,7 +64,7 @@ def update_version(asset, dst=None):
         zip_obj.extractall(dst)
         # wait 3 seconds
         time.sleep(3)
-        print("Updater has updated the randomizer core")
+        print(f"Updater has updated the randomizer {asset}")
 
     return local_filename, x['tag_name']
 
@@ -104,6 +105,7 @@ def launch_beyond_chaos():
 
 def main(config_path=Path(os.path.join(os.getcwd(), "config.ini"))):
     config = ConfigParser(strict=False)
+    running_os = platform.system()
 
     print("Welcome to the updater, we are starting things up, "
           "please do not close this window!")
@@ -111,12 +113,13 @@ def main(config_path=Path(os.path.join(os.getcwd(), "config.ini"))):
     print("Waiting 5 seconds for beyondchaos.exe to close")
     time.sleep(5)
     print("Checking to see if config file exists...")
-    if os.path.exists("config.ini"):
+    if os.path.exists(config_path):
         print("Config file was found, running updater.")
         config.read(config_path)
     else:
         print("No config file found, running first setup please wait.")
         write_default_config(config_path)
+        config.read(config_path)
 
     print("Updater is checking for a new version of the randomizer updater")
     if __version__ != get_version("updater"):
@@ -127,7 +130,9 @@ def main(config_path=Path(os.path.join(os.getcwd(), "config.ini"))):
         print("No update required. You have the most current version!")
 
     print("Updater is checking for a new version of the randomizer core")
-    if (config.get('Version', 'Core')) != get_version("core"):
+    if running_os != "Windows":
+        print("Cannot update randomizer executable for non-Windows OS.")
+    elif config.get('Version', 'Core') != get_version("core"):
         update_beyond_chaos(config)
     else:
         print("No update required. You have the most current version!")
@@ -149,8 +154,10 @@ def main(config_path=Path(os.path.join(os.getcwd(), "config.ini"))):
         config.write(fout)
 
     print("Update completed all update tasks!")
-    # TODO: check for os
-    launch_beyond_chaos()
+    if running_os == "Windows":
+        launch_beyond_chaos()
+    else:
+        print("Non-Windows OS detected, bypassing executable launch")
 
 def update_remonsterate(config):
     # Create the remonsterate directory in the game directory
