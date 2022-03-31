@@ -75,13 +75,13 @@ def update_updater():
 
 def update_monster_sprites(config):
     print("Updater is updating the randomizer monster sprites")
-    _, tag = update_version("sprite", "remonsterate")
+    _, tag = update_version("monster_sprite", "remonsterate")
     config.set('Version', 'Monster Sprite', tag)
     print("Updater has updated the randomizer monster sprites")
 
 def update_sprites(config):
     print("Updater is updating the randomizer sprites")
-    _, tag = update_version("monster_sprite", "custom")
+    _, tag = update_version("sprite", "custom")
     config.set('Version', 'Sprite', tag)
     print("Updater has updated the randomizer sprites")
 
