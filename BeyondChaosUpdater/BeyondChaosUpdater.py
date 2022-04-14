@@ -17,7 +17,7 @@ except ImportError:
 
 import remonstrate_utils
 
-__version__ = "1.3.0"
+__version__ = "2.0.0"
 
 DEFAULT_CONFIG = """
 [Version]
@@ -64,7 +64,6 @@ def update_version(asset, dst=None):
         zip_obj.extractall(dst)
         # wait 3 seconds
         time.sleep(3)
-        print(f"Updater has updated the randomizer {asset}")
 
     return local_filename, x['tag_name']
 
@@ -75,13 +74,13 @@ def update_updater():
 
 def update_monster_sprites(config):
     print("Updater is updating the randomizer monster sprites")
-    _, tag = update_version("sprite", "remonsterate")
+    _, tag = update_version("monster_sprite", "remonsterate")
     config.set('Version', 'Monster Sprite', tag)
     print("Updater has updated the randomizer monster sprites")
 
 def update_sprites(config):
     print("Updater is updating the randomizer sprites")
-    _, tag = update_version("monster_sprite", "custom")
+    _, tag = update_version("sprite", "custom")
     config.set('Version', 'Sprite', tag)
     print("Updater has updated the randomizer sprites")
 
