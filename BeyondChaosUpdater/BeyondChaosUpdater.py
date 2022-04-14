@@ -64,7 +64,6 @@ def update_version(asset, dst=None):
         zip_obj.extractall(dst)
         # wait 3 seconds
         time.sleep(3)
-        print(f"Updater has updated the randomizer {asset}")
 
     return local_filename, x['tag_name']
 
