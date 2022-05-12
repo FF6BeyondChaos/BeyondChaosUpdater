@@ -211,7 +211,7 @@ def main(config_path=Path(os.path.join(os.getcwd(), "config.ini"))):
             print(f"Updating the Beyond Chaos {asset.replace('_', ' ')}...")
             update_asset_from_web(asset)
             print(f"The Beyond Chaos {asset.replace('_', ' ')} " +
-                  "have" if asset.endswith("s") else "has" + "been updated.\n")
+                  ("have" if asset.endswith("s") else "has") + " been updated.\n")
 
     print("Rewriting updated version information to configuration.")
     with open(config_path, 'w') as fout:
