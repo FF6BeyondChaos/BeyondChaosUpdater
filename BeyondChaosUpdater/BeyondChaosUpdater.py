@@ -19,7 +19,7 @@ except ImportError:
              "before running updater. Try `pip install requests`.")
 import psutil
 
-__version__ = "2.0.0"
+__version__ = "2.1.0"
 
 config = ConfigParser(strict=False)
 parent_process_id = [arg[len("-pid "):] for arg in sys.argv if arg.startswith("-pid ")] or None
@@ -108,6 +108,13 @@ def update_asset_from_web(asset):
         with open(local_filename, 'wb') as f:
             shutil.copyfileobj(r.raw, f)
 
+    if asset == "updater":
+        # The currently-running executable cannot be deleted, so we rename it instead
+        # Then, we download the latest version from GitHub
+        # Finally, we run the newly downloaded exe and exit this older version
+        if sys.argv[0].endswith("exe"):
+            os.rename(sys.argv[0], BACKUP_NAME)
+
     dst = _ASSETS[asset]["location"] or os.getcwd()
     with ZipFile(local_filename, 'r') as zip_obj:
         # Extract all the contents of zip file in different directory
@@ -117,23 +124,18 @@ def update_asset_from_web(asset):
         # wait 3 seconds
         time.sleep(3)
 
-    if asset == "monster_sprites":
-        update_remonsterate()
-
     if asset == "updater":
-        # The currently-running executable cannot be deleted, so we rename it instead
-        # Then, we download the latest version from GitHub
-        # Finally, we run the newly downloaded exe and exit this older version
-        if sys.argv[0].endswith("exe"):
-            os.rename(sys.argv[0], BACKUP_NAME)
         print("The updater has been updated. Restarting...\n")
         subprocess.Popen(args=[], executable=sys.argv[0])
         sys.exit()
-    else:
-        if config:
-            if not config.has_section("Version"):
-                config.add_section("Version")
-            config.set('Version', asset, data['tag_name'])
+
+    if asset == "monster_sprites":
+        update_remonsterate()
+
+    if config:
+        if not config.has_section("Version"):
+            config.add_section("Version")
+        config.set('Version', asset, data['tag_name'])
 
 
 def launch_beyond_chaos():
@@ -160,6 +162,7 @@ def main(config_path=Path(os.path.join(os.getcwd(), "config.ini"))):
         try:
             if asset == "updater":
                 if __version__ != get_version(asset):
+                    # Version mismatch - there is an update available
                     _ASSETS["updater"]["update"] = True
             else:
                 if asset == "core" and running_os != "Windows":
@@ -167,13 +170,18 @@ def main(config_path=Path(os.path.join(os.getcwd(), "config.ini"))):
                     continue
 
                 if config.get('Version', asset) != get_version(asset):
+                    # Version mismatch - there is an update available
                     _ASSETS[asset]["update"] = True
         except (configparser.NoSectionError, configparser.NoOptionError):
+            # Config has no information about the section or option. Probably first time setup, so update.
             _ASSETS[asset]["update"] = True
 
         if _ASSETS[asset]["update"]:
+            # Retrieve the updated asset data from GitHub
             _ASSETS[asset]["data"] = requests.get(_ASSETS[asset]["URL"]).json()
-            download_size = _ASSETS[asset]["data"]['assets'][0]['size']
+            # In the asset, get the ['data']. From the data, get the ['assets'] (releases) returned from GitHub. We want
+            # index [0], presumably the newest release, and then we get the download ['size'] attribute from that
+            download_size = int(_ASSETS[asset]["data"]['assets'][0]['size'])
             if download_size < 1000:
                 size_suffix = "Bytes"
             elif download_size < 1000000:
@@ -191,14 +199,19 @@ def main(config_path=Path(os.path.join(os.getcwd(), "config.ini"))):
             if choice.lower() == "n":
                 _ASSETS[asset]["update"] = False
                 print(f"Skipping {asset.replace('_', ' ')} update.")
+            elif choice.lower() == "y":
+                if asset == "updater":
+                    # If we're updating the updater, we can skip the rest of the questions until the updater updates
+                    break
 
             print("")
 
     for asset in _ASSETS:
         if _ASSETS[asset]["update"]:
-            print(f"Updating the Beyond Chaos {asset.replace('_', ' ')} files...")
+            print(f"Updating the Beyond Chaos {asset.replace('_', ' ')}...")
             update_asset_from_web(asset)
-            print(f"The Beyond Chaos {asset.replace('_', ' ')} have been updated.\n")
+            print(f"The Beyond Chaos {asset.replace('_', ' ')} " +
+                  "have" if asset.endswith("s") else "has" + "been updated.\n")
 
     print("Rewriting updated version information to configuration.")
     with open(config_path, 'w') as fout:
