@@ -114,6 +114,12 @@ def update_asset_from_web(asset):
         # Finally, we run the newly downloaded exe and exit this older version
         if sys.argv[0].endswith("exe"):
             os.rename(sys.argv[0], BACKUP_NAME)
+    elif asset == "core":
+        if os.path.exists(os.path.join(os.getcwd(), "custom")):
+            for file in os.listdir(os.path.join(os.getcwd(), "custom")):
+                if os.path.isfile(file) and file.lower().endswith(".txt"):
+                    os.rename(file, file.replace(".txt", "old.txt"))
+
 
     dst = _ASSETS[asset]["location"] or os.getcwd()
     with ZipFile(local_filename, 'r') as zip_obj:
