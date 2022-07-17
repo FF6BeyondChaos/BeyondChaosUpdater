@@ -24,7 +24,8 @@ __version__ = "2.1.0"
 config = ConfigParser(strict=False)
 parent_process_id = [arg[len("-pid "):] for arg in sys.argv if arg.startswith("-pid ")] or None
 
-BACKUP_NAME = backup_name = sys.argv[0] + ".old"
+UPDATER_FILE = os.path.join(os.getcwd(), "beyondchaosupdater.exe")
+BACKUP_NAME = UPDATER_FILE + ".old"
 _BASE_PROJ_URL = 'https://api.github.com/repos/FF6BeyondChaos/'
 
 # Update: Does this asset require an update?
@@ -86,7 +87,7 @@ def get_version(asset):
 def update_asset_from_web(asset):
     global config
     global parent_process_id
-    if parent_process_id:
+    if not asset == 'updater' and parent_process_id:
         for proc in psutil.process_iter():
             if proc.pid == int(parent_process_id[0]) and proc.name().startswith("BeyondChaos"):
                 print("Killing process.")
@@ -112,13 +113,17 @@ def update_asset_from_web(asset):
         # The currently-running executable cannot be deleted, so we rename it instead
         # Then, we download the latest version from GitHub
         # Finally, we run the newly downloaded exe and exit this older version
-        if sys.argv[0].endswith("exe"):
-            os.rename(sys.argv[0], BACKUP_NAME)
+        if os.path.exists(BACKUP_NAME):
+            os.remove(BACKUP_NAME)
+        os.rename(os.path.join(os.getcwd(), "beyondchaosupdater.exe"), BACKUP_NAME)
     elif asset == "core":
         if os.path.exists(os.path.join(os.getcwd(), "custom")):
             for file in os.listdir(os.path.join(os.getcwd(), "custom")):
                 if os.path.isfile(file) and file.lower().endswith(".txt"):
-                    os.rename(file, file.replace(".txt", "old.txt"))
+                    backup_file_name = file.replace(".txt", "old.txt")
+                    if os.path.exists(backup_file_name):
+                        os.remove(backup_file_name)
+                    os.rename(file, backup_file_name)
 
 
     dst = _ASSETS[asset]["location"] or os.getcwd()
@@ -132,7 +137,7 @@ def update_asset_from_web(asset):
 
     if asset == "updater":
         print("The updater has been updated. Restarting...\n")
-        subprocess.Popen(args=[], executable=sys.argv[0])
+        subprocess.Popen(args=sys.argv, executable=UPDATER_FILE)
         sys.exit()
 
     if asset == "monster_sprites":
