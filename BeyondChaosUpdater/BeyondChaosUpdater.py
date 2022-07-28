@@ -19,7 +19,7 @@ except ImportError:
              "before running updater. Try `pip install requests`.")
 import psutil
 
-__version__ = "2.1.1"
+__version__ = "2.1.2"
 
 config = ConfigParser(strict=False)
 parent_process_id = [arg[len("-pid "):] for arg in sys.argv if arg.startswith("-pid ")] or None
@@ -56,6 +56,7 @@ _ASSETS = {
     "character_sprites": {
         "update": False,
         "prompt": "There is an update available for Beyond Chaos' character sprites.\n"
+                  "They are required to use the makeover code.\n"
                   "Would you like to download the new sprites from GitHub?\n",
         "location": os.path.join(os.getcwd(), "custom"),
         "URL": os.path.join(_BASE_PROJ_URL, 'BeyondChaosSprites/releases/latest'),
@@ -65,6 +66,7 @@ _ASSETS = {
     "monster_sprites": {
         "update": False,
         "prompt": "There is an update available for Beyond Chaos' monster sprites.\n"
+                  "They are required to use the remonsterate code.\n"
                   "Would you like to download the new sprites from GitHub?\n",
         "location": os.path.join(os.getcwd(), "remonsterate"),
         "URL": os.path.join(_BASE_PROJ_URL, 'BeyondChaosMonsterSprites/releases/latest'),
