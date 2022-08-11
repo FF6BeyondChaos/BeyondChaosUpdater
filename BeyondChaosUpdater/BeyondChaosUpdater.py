@@ -19,7 +19,7 @@ except ImportError:
              "before running updater. Try `pip install requests`.")
 import psutil
 
-__version__ = "2.1.2"
+__version__ = "2.1.3"
 
 config = ConfigParser(strict=False)
 parent_process_id = [arg[len("-pid "):] for arg in sys.argv if arg.startswith("-pid ")] or None
