@@ -273,5 +273,11 @@ def update_remonsterate():
 
 
 if __name__ == '__main__':
-    main()
-    time.sleep(3)
+    try:
+        requests.head(url='http://www.google.com')
+        main()
+        time.sleep(3)
+    except requests.exceptions.ConnectionError:
+        print("ERROR: No internet connection is available. Please connect to the internet and try running the updater "
+              "again.")
+        input("Press any key to exit...")
