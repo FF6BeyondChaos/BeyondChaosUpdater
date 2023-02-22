@@ -1,14 +1,13 @@
 import configparser
 import platform
-from zipfile import ZipFile
-from configparser import ConfigParser
+import time
 import shutil
 import os
-import time
 import sys
 import tempfile
 import remonstrate_utils
 import subprocess
+from configparser import ConfigParser
 from pathlib import Path
 
 # This is not part of the stdlib
@@ -17,9 +16,13 @@ try:
 except ImportError:
     sys.exit("Please install the `requests` python package "
              "before running updater. Try `pip install requests`.")
-import psutil
+try:
+    import psutil
+except ImportError:
+    sys.exit("Please install the `psutil` python package "
+             "before running updater. Try `pip install psutil`.")
 
-__version__ = "2.1.3"
+__version__ = "2.1.4"
 
 config = ConfigParser(strict=False)
 parent_process_id = [arg[len("-pid "):] for arg in sys.argv if arg.startswith("-pid ")] or None
@@ -118,37 +121,99 @@ def update_asset_from_web(asset):
         if os.path.exists(BACKUP_NAME):
             os.remove(BACKUP_NAME)
         os.rename(os.path.join(os.getcwd(), "beyondchaosupdater.exe"), BACKUP_NAME)
-    elif asset == "core":
-        if os.path.exists(os.path.join(os.getcwd(), "custom")):
-            for file in os.listdir(os.path.join(os.getcwd(), "custom")):
-                if os.path.isfile(file) and file.lower().endswith(".txt"):
-                    backup_file_name = file.replace(".txt", "old.txt")
-                    if os.path.exists(backup_file_name):
-                        os.remove(backup_file_name)
-                    os.rename(file, backup_file_name)
 
+        # Extract the new update
+        remonstrate_utils.extract_archive(local_filename, _ASSETS[asset]["location"] or os.getcwd())
 
-    dst = _ASSETS[asset]["location"] or os.getcwd()
-    with ZipFile(local_filename, 'r') as zip_obj:
-        # Extract all the contents of zip file in different directory
-        if not os.path.exists(dst):
-            os.makedirs(dst)
-        zip_obj.extractall(dst)
-        # wait 3 seconds
-        time.sleep(3)
+        if config:
+            if not config.has_section("Version"):
+                config.add_section("Version")
+            config.set('Version', asset, data['tag_name'])
 
-    if asset == "updater":
         print("The updater has been updated. Restarting...\n")
         subprocess.Popen(args=sys.argv, executable=UPDATER_FILE)
         sys.exit()
 
-    if asset == "monster_sprites":
-        update_remonsterate()
+    elif asset == "core":
+        # Extract the new update
+        remonstrate_utils.extract_archive(local_filename, _ASSETS[asset]["location"] or os.getcwd())
 
-    if config:
-        if not config.has_section("Version"):
-            config.add_section("Version")
-        config.set('Version', asset, data['tag_name'])
+        if config:
+            if not config.has_section("Version"):
+                config.add_section("Version")
+            config.set('Version', asset, data['tag_name'])
+
+    if asset == "character_sprites" or asset == "monster_sprites":
+        update_sprites = True
+        back_up_sprites = False
+        if config:
+            if config.has_section("Hashes"):
+                if config.has_option("Hashes", asset):
+                    # Compare the stored hash value with the hash of the existing spritereplacements file
+                    if asset == "character_sprites":
+                        current_hash = remonstrate_utils.get_directory_hash(_ASSETS[asset]["location"] + "/sprites")
+                        current_hash = remonstrate_utils.md5_update_from_file(_ASSETS[asset]["location"] +
+                                                                              "/spritereplacements.txt", current_hash)
+                    elif asset == "monster_sprites":
+                        current_hash = remonstrate_utils.get_directory_hash(_ASSETS[asset]["location"])
+
+                    if not config.get("Hashes", asset) == current_hash.hexdigest():
+                        # The asset has been customized
+                        prompting = True
+
+                        while prompting:
+                            prompting = False
+                            print("It appears your " + str.replace(asset, "_", " ") + " have been customized.")
+                            print("Would you like to back up the current " + str.replace(asset, "_", " ") +
+                                  " folder before updating?")
+                            choice = input("'Y' to create backup, "
+                                           "'N' to overwrite, or "
+                                           "'S' to skip updating the " + str.replace(asset, "_", " ") + ": ")
+                            if choice.lower() == "y" or choice.lower() == "yes":
+                                back_up_sprites = True
+                            elif choice.lower() == "n" or choice.lower() == "no":
+                                pass
+                            elif choice.lower() == "s":
+                                update_sprites = False
+                            else:
+                                prompting = True
+                                print("Please answer Y for yes or N for no.")
+                else:
+                    # If the hash for the asset does not exist, we can just back up the files to be safe
+                    back_up_sprites = True
+
+        if update_sprites:
+            if back_up_sprites:
+                timestamp = str(time.time())
+                shutil.copytree(_ASSETS[asset]["location"], _ASSETS[asset]["location"] + "_backup_" + timestamp)
+                # os.rename(_ASSETS[asset]["location"], _ASSETS[asset]["location"] + "_backup_" + timestamp)
+                print("Your custom directory has been backed up to " + _ASSETS[asset]["location"] +
+                      "_backup_" + timestamp + ".")
+
+            # Extract the new update
+            remonstrate_utils.extract_archive(local_filename, _ASSETS[asset]["location"] or os.getcwd())
+
+            # Set the hash of the new character sprites update
+            if config:
+                if not config.has_section("Hashes"):
+                    config.add_section("Hashes")
+                if asset == "character_sprites":
+                    current_hash = remonstrate_utils.get_directory_hash(_ASSETS[asset]["location"] + "/sprites")
+                    config.set("Hashes", asset, remonstrate_utils.md5_update_from_file(_ASSETS[asset]["location"] +
+                               "/spritereplacements.txt", current_hash).hexdigest())
+                elif asset == "monster_sprites":
+                    config.set("Hashes", asset,
+                               remonstrate_utils.get_directory_hash(_ASSETS[asset]["location"]).hexdigest())
+
+            if asset == "monster_sprites":
+                update_remonsterate()
+
+            if config:
+                if not config.has_section("Version"):
+                    config.add_section("Version")
+                config.set('Version', asset, data['tag_name'])
+        else:
+            print(asset + " update skipped.")
 
 
 def launch_beyond_chaos():

@@ -1,4 +1,44 @@
 import os
+import hashlib
+import time
+from pathlib import Path
+from zipfile import ZipFile
+
+
+def extract_archive(archive, destination):
+    with ZipFile(archive, 'r') as zip_obj:
+        # Extract all the contents of zip file
+        if not os.path.exists(destination):
+            os.makedirs(destination)
+        zip_obj.extractall(destination)
+        # wait 3 seconds
+        time.sleep(3)
+
+
+def md5_update_from_dir(directory, hash):
+    assert Path(directory).is_dir()
+    for path in sorted(Path(directory).iterdir(), key=lambda p: str(p).lower()):
+        hash.update(path.name.encode())
+        if path.is_file():
+            with open(path, "rb") as f:
+                for chunk in iter(lambda: f.read(4096), b""):
+                    hash.update(chunk)
+        elif path.is_dir():
+            hash = md5_update_from_dir(path, hash)
+    return hash
+
+
+def md5_update_from_file(filename, hash):
+    assert Path(filename).is_file()
+    with open(str(filename), "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash.update(chunk)
+    return hash
+
+
+def get_directory_hash(directory):
+    return md5_update_from_dir(directory, hashlib.md5())
+
 
 def generate_tag_file(tag_file):
     # Create the default images_and_tags.txt and monsters_and_tags.txt files
@@ -12,6 +52,7 @@ def generate_tag_file(tag_file):
 # Examples:
 # sprites/dragon.png:reptile,flying,kickass,boss
 # sprites/unicorn.png''')
+
 
 def construct_tag_file_from_dirs(sprite_directory, tag_file):
     # Populate the file name lists. Iterates through directories starting in the
@@ -41,6 +82,7 @@ def construct_tag_file_from_dirs(sprite_directory, tag_file):
 
     with open(tag_file, 'w') as text_file:
         text_file.write(spritelist)
+
 
 def generate_sample_monster_list(tag_file):
     with open(tag_file, 'w') as text_file:
