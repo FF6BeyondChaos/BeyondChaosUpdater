@@ -22,7 +22,7 @@ except ImportError:
     sys.exit("Please install the `psutil` python package "
              "before running updater. Try `pip install psutil`.")
 
-__version__ = "2.1.6"
+__version__ = "2.1.7"
 
 config = ConfigParser(strict=False)
 parent_process_id = [arg[len("-pid "):] for arg in sys.argv if arg.startswith("-pid ")] or None
@@ -178,12 +178,12 @@ def update_asset_from_web(asset):
                             else:
                                 prompting = True
                                 print("Please answer Y for yes or N for no.")
-                    else:
-                        # If the hash for the asset does not exist, we can just back up the files to be safe
-                        back_up_sprites = True
                 else:
                     # If the hash for the asset does not exist, we can just back up the files to be safe
                     back_up_sprites = True
+            else:
+                # If the hash for the asset does not exist, we can just back up the files to be safe
+                back_up_sprites = True
 
         if update_sprites:
             if back_up_sprites and os.path.exists(_ASSETS[asset]["location"]):
