@@ -22,7 +22,7 @@ except ImportError:
     sys.exit("Please install the `psutil` python package "
              "before running updater. Try `pip install psutil`.")
 
-__version__ = "2.1.5"
+__version__ = "2.1.6"
 
 config = ConfigParser(strict=False)
 parent_process_id = [arg[len("-pid "):] for arg in sys.argv if arg.startswith("-pid ")] or None
@@ -186,7 +186,7 @@ def update_asset_from_web(asset):
                     back_up_sprites = True
 
         if update_sprites:
-            if back_up_sprites:
+            if back_up_sprites and os.path.exists(_ASSETS[asset]["location"]):
                 timestamp = str(time.time())
                 shutil.copytree(_ASSETS[asset]["location"], _ASSETS[asset]["location"] + "_backup_" + timestamp)
                 # os.rename(_ASSETS[asset]["location"], _ASSETS[asset]["location"] + "_backup_" + timestamp)
