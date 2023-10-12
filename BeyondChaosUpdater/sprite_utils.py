@@ -61,8 +61,7 @@ def construct_tag_file_from_dirs(sprite_directory, tag_file):
     walk_distance = 6
     sprite_directory_level = sprite_directory.count(os.path.sep)
     spritelist = ""
-    print("Looking for and analyzing png files in " + sprite_directory + " and " + str(walk_distance) +
-          " levels of sub-directories.")
+    print("Generating images_and_tags.txt using the updated sprite files.")
     for root, dirs, files in os.walk(sprite_directory):
         current_walking_directory = os.path.abspath(root)
         current_directory_level = current_walking_directory.count(os.path.sep)
